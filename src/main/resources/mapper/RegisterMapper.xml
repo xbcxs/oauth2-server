@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xbcxs.server.register.RegisterMapper">
+
+    <select id="selectAll" resultType="map" parameterType="map">
+        SELECT id, client_id AS "clientId", client_name AS "clientName", client_secret AS "clientSecret", redirect_uri AS "redirectUri", state FROM auth_client
+        <where>id = #{id} </where>
+    </select>
+
+    <!--<select id="queryById" resultType="com.example.springboot.mybatis.entity.User">
+        SELECT u.id, u.username, u.password, u.email, u.useable, u.addtime, u.logintime, u.loginip FROM t_user u where u.id = #{id}
+    </select>-->
+
+    <!--<insert id="save">
+        insert into t_user(id,username, password, email, useable)
+        values(#{id},#{username}, #{password}, #{email}, #{useable})
+    </insert>
+
+    <update id="update">
+        update t_user set password = #{password}, email = #{email}, useable = #{useable} where id = #{id}
+    </update>
+
+    <delete id="batchDelete">
+        delete from m_user where id in
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>-->
+
+    <!-- <delete id="delUsers">
+       delete from m_user where id in
+       <foreach collection="list" item="item" open="(" separator="," close=")">
+          #{item}
+       </foreach>
+    </delete> -->
+</mapper>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function doSomething() {
+            var ret = confirm("确认登录!");
+            if (ret) {
+                window.location.href = "identity/login" + window.location.search;;
+            }
+        }
+    </script>
+</head>
+<body>
+<a href="javascript:void(0)" onclick="doSomething(this)">登录</a>
+</body>
+</html>

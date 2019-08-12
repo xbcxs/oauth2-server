@@ -19,7 +19,37 @@
 
     <!-- 此缓存最多可以存活timeToLiveSeconds秒，如果期间超过timeToIdleSeconds秒未访问，缓存失效 -->
     <cache
-            name = "userCache"
+            name = "loginTokenCache"
+            eternal = "false"
+            maxElementsInMemory = "100"
+            overflowToDisk = "false"
+            diskPersistent = "false"
+            timeToIdleSeconds = "120"
+            timeToLiveSeconds = "180"
+            memoryStoreEvictionPolicy = "LRU"/>
+
+    <cache
+            name = "oauthCodeCache"
+            eternal = "false"
+            maxElementsInMemory = "100"
+            overflowToDisk = "false"
+            diskPersistent = "false"
+            timeToIdleSeconds = "120"
+            timeToLiveSeconds = "180"
+            memoryStoreEvictionPolicy = "LRU"/>
+
+    <cache
+            name = "accessTokenCache"
+            eternal = "false"
+            maxElementsInMemory = "100"
+            overflowToDisk = "false"
+            diskPersistent = "false"
+            timeToIdleSeconds = "120"
+            timeToLiveSeconds = "180"
+            memoryStoreEvictionPolicy = "LRU"/>
+
+    <cache
+            name = "refreshTokenCache"
             eternal = "false"
             maxElementsInMemory = "100"
             overflowToDisk = "false"

@@ -7,6 +7,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class OAuthUtils {
 
+    /**
+     * 获取WEB项目请求地址
+     * @param request
+     * @return
+     */
     public static String getRequestPrefix(HttpServletRequest request) {
         // 获取网络协议
         String networkProtocol = request.getScheme();

@@ -1,18 +1,25 @@
 package com.xbcxs.server.authorize;
 
-import java.util.Hashtable;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 /**
  * Created by xiaosh on 2019/8/5.
  */
 public interface CodeService {
 
-    Hashtable save(String id);
+   /* Hashtable saveCode(String id);
 
-    boolean remove(String id);
+    boolean removeCode(String id);
 
     boolean exist(String id);
 
-    boolean expires();
+    boolean expires();*/
+
+    /**
+     * 生成code码
+     * @return
+     * @throws OAuthSystemException
+     */
+    String generateCode() throws OAuthSystemException;
 
 }

@@ -13,4 +13,8 @@ public class OAuthConstants {
 
     public static String CODE = "code";
 
+    public class CacheCase {
+        public static final String LOGIN_TOKEN_CACHE = "loginTokenCache";
+    }
+
 }

@@ -10,39 +10,40 @@ public class ResultMessage {
     /**
      * 0 失败；1成功
      */
-    private int code = 1;
-    private String msg;
+    private int code;
+    private StringBuilder msg;
     private JSONObject data;
 
     public ResultMessage() {
-
+        code = 1;
+        msg = new StringBuilder();
     }
 
-    public void error(String msg){
+    public void errorAppend(String msg){
         this.setCode(0);
-        this.setMsg(msg);
+        this.msg.append(msg).append(";");
     }
 
     public void success(String msg){
         this.setCode(1);
-        this.setMsg(msg);
+        this.msg.append(msg).append(";");
     }
 
-    public void success(String msg, JSONObject data){
+    public void success(JSONObject data){
         this.setCode(1);
-        this.setMsg(msg);
+        this.msg.append("ok");
         this.setData(data);
     }
 
-    public void success(int code, String msg, JSONObject data){
+    public void message(int code, String msg){
         this.setCode(code);
-        this.setMsg(msg);
-        this.setData(data);
+        this.msg.append(msg).append(";");
     }
 
-    @Override
-    public String toString() {
-        return String.valueOf(JSONObject.toJSON(this));
+    public void message(int code, String msg, JSONObject data){
+        this.setCode(code);
+        this.msg.append(msg).append(";");
+        this.setData(data);
     }
 
     public int getCode() {
@@ -53,19 +54,16 @@ public class ResultMessage {
         this.code = code;
     }
 
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
     public JSONObject getData() {
         return data;
     }
 
     public void setData(JSONObject data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(JSONObject.toJSON(this));
     }
 }

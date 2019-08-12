@@ -1,7 +1,13 @@
 package com.xbcxs.server.authorize;
 
+import org.apache.oltu.oauth2.as.issuer.MD5Generator;
+import org.apache.oltu.oauth2.as.issuer.OAuthIssuer;
+import org.apache.oltu.oauth2.as.issuer.OAuthIssuerImpl;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Hashtable;
 
 /**
@@ -10,34 +16,20 @@ import java.util.Hashtable;
 @Component
 public class CodeServiceImpl implements CodeService {
 
-    private Hashtable map = new Hashtable();
-
     /**
      *  CODE超期时间
      */
     private int EXPIRES_TIME = 10 * 60 * 1000;
 
-    @Override
-    public Hashtable save(String id) {
-        map.put(id, id);
-        return map;
-    }
+    @Resource
+    private CacheManager cacheManager;
 
     @Override
-    public boolean remove(String id) {
-        map.remove(id);
-        return true;
+    public String generateCode() throws OAuthSystemException {
+        // 生成授权码
+        OAuthIssuer oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
+        return oauthIssuerImpl.authorizationCode();
     }
 
-    @Override
-    public boolean exist(String id) {
-        return map.containsKey(id);
-    }
-
-    @Override
-    public boolean expires() {
-        // TODO 手自动刷新并Evict过期对象
-        return false;
-    }
 
 }

@@ -22,7 +22,6 @@ import java.io.IOException;
  * Created by xiaosh on 2019/8/6.
  */
 @RestController
-@RequestMapping("identify")
 public class LoginController {
 
     private Logger log = LoggerFactory.getLogger(LoginController.class);
@@ -43,8 +42,9 @@ public class LoginController {
     public void login(HttpServletRequest request, HttpServletResponse response) {
         try {
             // 模拟登录并保存信息
-            String userId = String.valueOf(new java.util.Date().getTime());
-            loginService.login(userId, "password");
+            String loginName = "loginxxx";
+            String userId = "userId_" + loginName;
+            loginService.login(loginName, "password");
             log.info("用户登录...");
 
             // 回调客户端
@@ -52,7 +52,7 @@ public class LoginController {
             OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
             String redirectUri = oauthRequest.getRedirectURI();
             if (resultMessage.getCode() == 1) {
-                String code = codeServiceImpl.generateCode();
+                String code = codeServiceImpl.generateCode(userId, oauthRequest.getClientId());
                 // 构建OAuth响应
                 OAuthResponse oauthResponse = OAuthASResponse.authorizationResponse(request, HttpServletResponse.SC_FOUND)
                         .setCode(code)

@@ -29,7 +29,7 @@
             memoryStoreEvictionPolicy = "LRU"/>
 
     <cache
-            name = "oauthCodeCache"
+            name = "codeCache"
             eternal = "false"
             maxElementsInMemory = "100"
             overflowToDisk = "false"

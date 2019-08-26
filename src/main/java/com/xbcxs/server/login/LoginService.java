@@ -17,7 +17,7 @@ public interface LoginService{
     boolean validate(String loginToken);
 
     /**
-     * 账号密码登录
+     * 账号密码登录并生成登录token
      * @param loginName
      * @param password
      * @return

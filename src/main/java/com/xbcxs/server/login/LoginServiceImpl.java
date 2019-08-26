@@ -33,11 +33,11 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public String login(String loginName, String password) throws OAuthSystemException {
         // 验证账号密码,省略...
-        String userId = "UserId_" + loginName;
+        String userId = "userId_" + loginName;
         // 生成登录token存入缓存
-        String loginTokenId = new MD5Generator().generateValue();
+        String loginToken = new MD5Generator().generateValue();
         Cache cache = cacheManager.getCache(OAuthConstants.CacheCase.LOGIN_TOKEN_CACHE);
-        cache.put(loginTokenId, userId);
-        return loginTokenId;
+        cache.put(loginToken, userId);
+        return loginToken;
     }
 }

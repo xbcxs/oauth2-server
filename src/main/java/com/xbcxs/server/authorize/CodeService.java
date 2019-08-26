@@ -3,23 +3,39 @@ package com.xbcxs.server.authorize;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 /**
- * Created by xiaosh on 2019/8/5.
+ * Code业务实现层
+ * @author xiaosh
+ * @date 2019/8/13
  */
 public interface CodeService {
 
-   /* Hashtable saveCode(String id);
-
-    boolean removeCode(String id);
-
-    boolean exist(String id);
-
-    boolean expires();*/
-
     /**
-     * 生成code码
+     * 生成code码并存入缓存
+     * @param userId 用户ID
+     * @param ClientId 客户端ID
      * @return
      * @throws OAuthSystemException
      */
-    String generateCode() throws OAuthSystemException;
+    String generateCode(String userId, String ClientId) throws OAuthSystemException;
+
+    /**
+     * 判断code是否存在
+     * @param code 编码
+     * @return
+     */
+    boolean isExist(String code);
+
+    /**
+     * 得到CODE对象
+     * @param code
+     * @return
+     */
+    Code getCode(String code);
+
+    /**
+     * 删除
+     * @param code
+     */
+    void evictCode(String code);
 
 }

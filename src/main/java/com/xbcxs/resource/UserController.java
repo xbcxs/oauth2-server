@@ -1,5 +1,7 @@
 package com.xbcxs.resource;
 
+import com.alibaba.fastjson.JSONObject;
+import com.xbcxs.common.ResponseWriter;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
@@ -7,6 +9,8 @@ import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.ParameterStyle;
 import org.apache.oltu.oauth2.rs.request.OAuthAccessResourceRequest;
 import org.apache.oltu.oauth2.rs.response.OAuthRSResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,21 +21,27 @@ import javax.servlet.http.HttpServletResponse;
  * Created by xiaosh on 2019/8/7.
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("resource")
 public class UserController {
+
+    private Logger log = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping("getUser")
     public void getUserInfo(HttpServletRequest request, HttpServletResponse response) {
-
+        log.info(">>>>>>>>>getUser...");
         try {
             // Make the OAuth Request out of this request and validate it
             // Specify where you expect OAuth access token (request header, body or query string)
-            OAuthAccessResourceRequest oauthRequest = new OAuthAccessResourceRequest(request, ParameterStyle.HEADER);
+            OAuthAccessResourceRequest oauthRequest = new OAuthAccessResourceRequest(request, ParameterStyle.QUERY);
 
             // Get the access token
             String accessToken = oauthRequest.getAccessToken();
 
             //... validate access token
+            JSONObject userObject = new JSONObject();
+            userObject.put("userId", "xxxxxx");
+            userObject.put("userName", "yyyyy");
+            ResponseWriter.writer(response, userObject.toString());
 
             //if something goes wrong
         } catch (OAuthProblemException ex) {
@@ -44,10 +54,10 @@ public class UserController {
                         .buildHeaderMessage();
                 response.addDateHeader(OAuth.HeaderType.WWW_AUTHENTICATE, Long.parseLong(oauthResponse.getHeader(OAuth.HeaderType.WWW_AUTHENTICATE)));
             } catch (OAuthSystemException e) {
-                e.printStackTrace();
+                log.error("OAuthSystemException", e);
             }
         } catch (OAuthSystemException e) {
-            e.printStackTrace();
+            log.error("OAuthSystemException", e);
         }
 
     }

@@ -3,9 +3,12 @@ package com.xbcxs.client;
 import com.xbcxs.common.OAuthConstants;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
+import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
 import org.apache.oltu.oauth2.client.response.OAuthAuthzResponse;
+import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
+import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
@@ -20,7 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by xiaosh on 2019/7/31.
+ *
+ * @author xiaosh
+ * @date 2019/7/29
  */
 @RestController
 @RequestMapping("client")
@@ -35,11 +40,11 @@ public class OAuthClientController {
      * @param response
      */
     @RequestMapping("/requestAuth")
-    public void requestAuth(HttpServletRequest request, HttpServletResponse response){
+    public void requestAuth(HttpServletRequest request, HttpServletResponse response) {
         try {
             OAuthClientRequest oAuthClientRequest = OAuthClientRequest
                     .authorizationLocation("http://localhost:8888/as/auth/authorize")
-                    .setClientId(OAuthConstants.CLIENT_ID )
+                    .setClientId(OAuthConstants.CLIENT_ID)
                     .setRedirectURI(OAuthConstants.REDIRECT_URI)
                     .setResponseType(OAuthConstants.CODE)
                     .buildQueryMessage();
@@ -54,16 +59,14 @@ public class OAuthClientController {
 
     @RequestMapping("/getToken")
     public void getToken(HttpServletRequest request, HttpServletResponse response) throws OAuthProblemException, OAuthSystemException, IOException {
-        // TODO 不知道是否对CODE有过期处理机制
         OAuthAuthzResponse oAuthAuthzResponse = OAuthAuthzResponse.oauthCodeAuthzResponse(request);
         String code = oAuthAuthzResponse.getCode();
 
-        // TODO 验证state防止其他人CODE获取权限
         // 构建客户端请求信息
         OAuthClientRequest oauthClientRequest = OAuthClientRequest
                 .tokenLocation("http://localhost:8888/as/auth/accessToken")
                 .setGrantType(GrantType.AUTHORIZATION_CODE)
-                .setClientId(OAuthConstants.CLIENT_ID )
+                .setClientId(OAuthConstants.CLIENT_ID)
                 .setClientSecret(OAuthConstants.CLIENT_SECRET)
                 .setRedirectURI(OAuthConstants.REDIRECT_URI)
                 .setCode(code)
@@ -76,6 +79,7 @@ public class OAuthClientController {
         String refreshToken = oAuthResponse.getRefreshToken();
         String scope = oAuthResponse.getScope();
         Long expiresIn = oAuthResponse.getExpiresIn();
+
         // TODO 发起API接口请求
         log.info("》》》》》》accessToken:" + accessToken);
         log.info("》》》》》》expiresIn:" + expiresIn);
@@ -83,17 +87,37 @@ public class OAuthClientController {
         log.info("》》》》》》scope:" + scope);
 
         // TODO 通过TOKEN获取人员信息
+        /*CloseableHttpClient httpclient = HttpClients.createDefault();
+        try {
+            HttpPost httpPost = new HttpPost("http://localhost:8888/as/resource/getUser");
+            httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+            nvps.add(new BasicNameValuePair("access_token", accessToken));
+            nvps.add(new BasicNameValuePair("token_type", "Bearer"));
+            httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+            CloseableHttpResponse response2 = httpclient.execute(httpPost);
+
+            try {
+                System.out.println(response2.getStatusLine());
+                HttpEntity entity2 = response2.getEntity();
+                // do something useful with the response body
+                // and ensure it is fully consumed
+                EntityUtils.consume(entity2);
+            } finally {
+                response2.close();
+            }
+        } finally {
+            httpclient.close();
+        }*/
+
+        OAuthClient oAuthClient1 = new OAuthClient(new URLConnectionClient());
+        OAuthClientRequest bearerClientRequest = new OAuthBearerClientRequest("http://localhost:8888/as/resource/getUser")
+                .setAccessToken(accessToken).buildQueryMessage();
+
+        OAuthResourceResponse resourceResponse = oAuthClient1.resource(bearerClientRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
+        log.info(">>>>>>>>>>>>>>>>resourceResponse.getBody():" + resourceResponse.getBody());
         // TODO 用这个人在第三方系统初始化账号并且登录，然后进入系统
 
     }
 
-    @RequestMapping("getUserInfo")
-    public void getUserInfo(HttpServletRequest req, HttpServletResponse resq){
-        log.info("【getUserInfo】：......");
-        OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
-        // GitHubTokenResponse oAuthResponse = oAuthClient.accessToken(req);
-
-        // String accessToken = oAuthResponse.getAccessToken();
-
-    }
 }

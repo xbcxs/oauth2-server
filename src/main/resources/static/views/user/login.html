@@ -1,76 +1,79 @@
-
 <!DOCTYPE html>
-<html>
+<html style="background-color: #F2F2F2">
 <head>
-  <meta charset="utf-8">
-  <title>登入</title>
-  <link rel="stylesheet" href="../../frame/layui/css/layui.css">
-  <link rel="stylesheet" href="../../res/css/global.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>OAuth2.0-Server Login</title>
+    <link rel="stylesheet" href="../../frame/layui/css/layui.css">
 </head>
 <body>
-
-<!--<div class="fly-header layui-bg-black">
-
-</div>-->
-
-<div class="layui-container fly-marginTop">
-  <div class="fly-panel fly-panel-user" pad20>
-    <div class="layui-tab layui-tab-brief" lay-filter="user">
-      <ul class="layui-tab-title">
-        <li class="layui-this">登入</li>
-        <li><a href="reg.html">注册</a></li>
-      </ul>
-      <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
-        <div class="layui-tab-item layui-show">
-          <div class="layui-form layui-form-pane">
-            <form method="post">
-              <div class="layui-form-item">
-                <label for="L_email" class="layui-form-label">账号</label>
-                <div class="layui-input-inline">
-                  <input type="text" id="L_email" name="email" required lay-verify="required" autocomplete="off" class="layui-input">
-                </div>
-              </div>
-              <div class="layui-form-item">
-                <label for="L_pass" class="layui-form-label">密码</label>
-                <div class="layui-input-inline">
-                  <input type="password" id="L_pass" name="pass" required lay-verify="required" autocomplete="off" class="layui-input">
-                </div>
-              </div>
-              <div class="layui-form-item">
-                <button class="layui-btn" lay-filter="*" lay-submit>立即登录</button>
-                <span style="padding-left:20px;">
-                  <a href="forget.html">忘记密码？</a>
-                </span>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+<div style="width: 450px; height: 280px; padding-top: 1px; margin: 200px auto auto auto; background-color: white;">
+    <div class="layui-tab layui-tab-brief" style="margin: 20px 20px 20px 20px;">
+        <ul class="layui-tab-title">
+            <li class="layui-this">登入</li>
+            <li><a href="#">注册</a></li>
+        </ul>
     </div>
-  </div>
-</div>
-
-<div class="fly-footer">
-  <p><a href="#">纸短情长</a> 2019 &copy; <a href="#" target="_blank">xyz</a></p>
+    <div style="margin: 10px 20px 20px 20px;">
+        <div class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">账  号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="loginName" required lay-verify="required" placeholder="请输入账号" value="guest" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密  码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" value="123456" autocomplete="off" class="layui-input" style="width: 300px;">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left: 0px;">
+                    <button class="layui-btn" lay-submit lay-filter="loginButton">立即登录</button>
+                    <span style="padding-left:20px;"><a href="forget.html">忘记密码？331</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="../../frame/layui/layui.js"></script>
 <script>
-layui.cache.page = 'user';
-layui.cache.user = {
-  username: '游客'
-  ,uid: -1
-  ,avatar: '../../res/images/avatar/00.jpg'
-  ,experience: 83
-  ,sex: '男'
-};
-layui.config({
-  version: "3.0.0"
-  ,base: '../../res/mods/'
-}).extend({
-  fly: 'index'
-}).use('fly');
-</script>
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'form'], function(){
+        var layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery;
 
+        console.log(layui);
+
+        var basePath = function getRootPath() {
+            var curWwwPath = window.document.location.href;
+            var pathName = window.document.location.pathname;
+            var pos = curWwwPath.indexOf(pathName);
+            var localhostPath = curWwwPath.substring(0, pos);
+            var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+            return localhostPath+projectName;
+        }();
+
+        //监听提交
+        form.on('submit(loginButton)', function(data){
+
+            // window.location.href = basePath + '/login' + window.location.search;
+            // layer.msg(JSON.stringify(data.field));
+            $.ajax({
+                url: basePath + '/login' + window.location.search,
+                data: data.field,
+                type: 'post',
+                dataType: 'json',
+                success: function (jsonObject) {
+                    layer.msg(JSON.stringify(jsonObject));
+                    window.location.href = jsonObject.data.redirectUri;
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

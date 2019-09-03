@@ -35,9 +35,9 @@ public class LoginServiceImpl implements LoginService {
         // 验证账号密码,省略...
         String userId = "userId_" + loginName;
         // 生成登录token存入缓存
-        String loginToken = new MD5Generator().generateValue();
+        String tokenId = new MD5Generator().generateValue();
         Cache cache = cacheManager.getCache(OAuthConstants.CacheCase.LOGIN_TOKEN_CACHE);
-        cache.put(loginToken, userId);
-        return loginToken;
+        cache.put(tokenId, userId);
+        return tokenId;
     }
 }

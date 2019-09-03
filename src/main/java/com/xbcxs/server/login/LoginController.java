@@ -1,5 +1,6 @@
 package com.xbcxs.server.login;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xbcxs.common.ResponseWriter;
 import com.xbcxs.common.ResultMessage;
 import com.xbcxs.server.authorize.CodeService;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Created by xiaosh on 2019/8/6.
@@ -42,24 +42,43 @@ public class LoginController {
     public void login(HttpServletRequest request, HttpServletResponse response) {
         try {
             // 模拟登录并保存信息
-            String loginName = "loginxxx";
-            String userId = "userId_" + loginName;
-            loginService.login(loginName, "password");
+            String loginName = request.getParameter("loginName");
+            String password = request.getParameter("password");
+            String tokenId = loginService.login(loginName, password);
             log.info("用户登录...");
 
             // 回调客户端
-            ResultMessage resultMessage = new ResultMessage();
+          /*  OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
+            String redirectUri = oauthRequest.getRedirectURI();
+            Cache cache = cacheManager.getCache(OAuthConstants.CacheCase.LOGIN_TOKEN_CACHE);
+            String userId = cache.get(loginToken, String.class);
+            String code = codeServiceImpl.generateCode(userId, oauthRequest.getClientId());
+            // 构建OAuth响应
+            OAuthResponse oauthResponse = OAuthASResponse.authorizationResponse(request, HttpServletResponse.SC_FOUND)
+                    .setCode(code)
+                    .location(redirectUri)
+                    .buildQueryMessage();
+            log.info("回调客户端请求:" + oauthResponse.getLocationUri());
+            response.sendRedirect(oauthResponse.getLocationUri());*/
+
+
             OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
             String redirectUri = oauthRequest.getRedirectURI();
-            if (resultMessage.getCode() == 1) {
-                String code = codeServiceImpl.generateCode(userId, oauthRequest.getClientId());
+            boolean falg = true;
+            if (falg) {
+                String code = codeServiceImpl.generateCode(tokenId, oauthRequest.getClientId());
                 // 构建OAuth响应
                 OAuthResponse oauthResponse = OAuthASResponse.authorizationResponse(request, HttpServletResponse.SC_FOUND)
                         .setCode(code)
                         .location(redirectUri)
                         .buildQueryMessage();
                 log.info("回调客户端:" + oauthResponse.getLocationUri());
-                response.sendRedirect(oauthResponse.getLocationUri());
+                // response.sendRedirect(oauthResponse.getLocationUri());
+                JSONObject jsonData = new JSONObject();
+                jsonData.put("redirectUri", oauthResponse.getLocationUri());
+                resultMessage.setData(jsonData);
+                ResponseWriter.writer(response, new ResultMessage(0,));
+
             } else {
                 ResponseWriter.writer(response, resultMessage.toString());
             }
@@ -67,8 +86,8 @@ public class LoginController {
             e.printStackTrace();
         } catch (OAuthProblemException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+     /*   } catch (IOException e) {
+            e.printStackTrace();*/
         }
     }
 }

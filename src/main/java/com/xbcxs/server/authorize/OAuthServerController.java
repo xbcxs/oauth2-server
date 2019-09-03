@@ -60,7 +60,7 @@ public class OAuthServerController {
                 throw new RuntimeException(resultMessage.toString());
             }
             // 校验是否已经登录
-            String loginToken = request.getParameter("loginToken");
+            String loginToken = request.getParameter("");
             if (loginServiceImpl.validate(loginToken)) {
                 OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
                 String redirectUri = oauthRequest.getRedirectURI();
@@ -77,7 +77,7 @@ public class OAuthServerController {
             } else {
                 //  构建请求，跳转至登录页面
                 OAuthClientRequest oAuthClientRequest = OAuthClientRequest
-                        .authorizationLocation(OAuthUtils.getRequestPrefix(request) + "/login.html")
+                        .authorizationLocation(OAuthUtils.getRequestPrefix(request) + "/views/user/login.html")
                         .setClientId(OAuthConstants.CLIENT_ID)
                         .setRedirectURI(OAuthConstants.REDIRECT_URI)
                         .setResponseType(OAuthConstants.CODE)

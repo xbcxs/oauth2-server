@@ -117,7 +117,10 @@ public class OAuthClientController {
         OAuthResourceResponse resourceResponse = oAuthClient1.resource(bearerClientRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
         log.info(">>>>>>>>>>>>>>>>resourceResponse.getBody():" + resourceResponse.getBody());
         // TODO 用这个人在第三方系统初始化账号并且登录，然后进入系统
-
+        /*ResultMessage resultMessage = new ResultMessage();
+        ResponseWriter.writer(response, resultMessage.toString());
+*/
+        response.sendRedirect("https://www.baidu.com/");
     }
 
 }

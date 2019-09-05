@@ -8,25 +8,24 @@ import java.io.Serializable;
  */
 public class Code implements Serializable {
 
-    private String code;
-    private String userId;
+    private String codeId;
+    private String authUserId;
     private String clientId;
-    private String scope;
 
-    public String getCode() {
-        return code;
+    public String getCodeId() {
+        return codeId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCodeId(String codeId) {
+        this.codeId = codeId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getAuthUserId() {
+        return authUserId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setAuthUserId(String authUserId) {
+        this.authUserId = authUserId;
     }
 
     public String getClientId() {
@@ -35,13 +34,5 @@ public class Code implements Serializable {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
     }
 }

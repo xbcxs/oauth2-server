@@ -31,7 +31,7 @@
             <div class="layui-form-item">
                 <div class="layui-input-block" style="margin-left: 0px;">
                     <button class="layui-btn" lay-submit lay-filter="loginButton">立即登录</button>
-                    <span style="padding-left:20px;"><a href="forget.html">忘记密码？331</a></span>
+                    <span style="padding-left:20px;"><a href="#">忘记密码？</a></span>
                 </div>
             </div>
         </div>
@@ -45,8 +45,6 @@
         var layer = layui.layer
             ,form = layui.form
             ,$ = layui.jquery;
-
-        console.log(layui);
 
         var basePath = function getRootPath() {
             var curWwwPath = window.document.location.href;
@@ -63,12 +61,14 @@
             // window.location.href = basePath + '/login' + window.location.search;
             // layer.msg(JSON.stringify(data.field));
             $.ajax({
-                url: basePath + '/login' + window.location.search,
+                url: basePath + '/oauthLogin' + window.location.search,
                 data: data.field,
                 type: 'post',
                 dataType: 'json',
                 success: function (jsonObject) {
-                    layer.msg(JSON.stringify(jsonObject));
+                    // layer.msg(JSON.stringify(jsonObject));
+                    console.log(JSON.stringify(jsonObject));
+                    debugger;
                     window.location.href = jsonObject.data.redirectUri;
                 }
             });

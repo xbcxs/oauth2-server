@@ -10,9 +10,9 @@ public interface AccessTokenService {
 
     /**
      * 生成accessToken
-     * @param code
+     * @param codeId
      * @return
      * @throws OAuthSystemException
      */
-    AccessToken generateAccessToken(String code) throws OAuthSystemException;
+    AuthToken generateAccessToken(String codeId) throws OAuthSystemException;
 }

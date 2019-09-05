@@ -3,7 +3,7 @@ package com.xbcxs.server.authorize;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 /**
- * Code业务实现层
+ * Code业务接口
  * @author xiaosh
  * @date 2019/8/13
  */
@@ -11,12 +11,12 @@ public interface CodeService {
 
     /**
      * 生成code码并存入缓存
-     * @param userId 用户ID
+     * @param authUserId 认证服务器的用户ID
      * @param ClientId 客户端ID
      * @return
      * @throws OAuthSystemException
      */
-    String generateCode(String userId, String ClientId) throws OAuthSystemException;
+    String generateCode(String authUserId, String ClientId) throws OAuthSystemException;
 
     /**
      * 判断code是否存在

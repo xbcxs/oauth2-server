@@ -1,6 +1,6 @@
 package com.xbcxs.server.authorize;
 
-import com.xbcxs.common.OAuthConstants;
+import com.xbcxs.common.OauthConstants;
 import org.apache.oltu.oauth2.as.issuer.MD5Generator;
 import org.apache.oltu.oauth2.as.issuer.OAuthIssuer;
 import org.apache.oltu.oauth2.as.issuer.OAuthIssuerImpl;
@@ -10,8 +10,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Code业务实现层
@@ -25,41 +23,34 @@ public class CodeServiceImpl implements CodeService {
     private CacheManager cacheManager;
 
     @Override
-    public String generateCode(String userId, String clientId) throws OAuthSystemException {
+    public String generateCode(String authUserId, String clientId) throws OAuthSystemException {
         OAuthIssuer oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
-        String code = oauthIssuerImpl.authorizationCode();
-        Cache cache = cacheManager.getCache(OAuthConstants.CacheCase.CODE_CACHE);
+        String codeId = oauthIssuerImpl.authorizationCode();
+        Cache cache = cacheManager.getCache(OauthConstants.CacheCase.CODE_CACHE);
         Code codeObject = new Code();
-        codeObject.setCode(code);
-        codeObject.setUserId(userId);
+        codeObject.setCodeId(codeId);
+        codeObject.setAuthUserId(authUserId);
         codeObject.setClientId(clientId);
-        // TODO 查询授权范围
-        codeObject.setScope("1");
-        cache.put(code, codeObject);
-        return code;
+        cache.put(codeId, codeObject);
+        return codeId;
     }
 
     @Override
     public boolean isExist(String code) {
-        boolean flag = false;
-        Cache cache = cacheManager.getCache(OAuthConstants.CacheCase.CODE_CACHE);
+        Cache cache = cacheManager.getCache(OauthConstants.CacheCase.CODE_CACHE);
         Code codeObject = cache.get(code, Code.class);
-        if(codeObject != null){
-            flag = true;
-        }
-        return flag;
+        return codeObject != null ? true : false;
     }
 
     @Override
     public Code getCode(String code) {
-        Cache codeCache = cacheManager.getCache(OAuthConstants.CacheCase.CODE_CACHE);
-        Code codeObj = codeCache.get(code, Code.class);
-        return codeObj;
+        Cache codeCache = cacheManager.getCache(OauthConstants.CacheCase.CODE_CACHE);
+        return codeCache.get(code, Code.class);
     }
 
     @Override
     public void evictCode(String code) {
-        Cache codeCache = cacheManager.getCache(OAuthConstants.CacheCase.CODE_CACHE);
+        Cache codeCache = cacheManager.getCache(OauthConstants.CacheCase.CODE_CACHE);
         codeCache.evict(code);
     }
 }

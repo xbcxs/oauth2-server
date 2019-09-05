@@ -1,7 +1,9 @@
 package com.xbcxs.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.xbcxs.common.HttpResult;
 import com.xbcxs.common.OauthConstants;
+import com.xbcxs.common.ResponseWriter;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
@@ -85,6 +87,7 @@ public class OauthClientController {
             e.printStackTrace();
         } catch (OAuthProblemException e) {
             e.printStackTrace();
+            ResponseWriter.writer(response, HttpResult.error("获取accessToken异常！"));
         } catch (IOException e) {
             e.printStackTrace();
         }

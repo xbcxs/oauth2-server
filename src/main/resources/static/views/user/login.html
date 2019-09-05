@@ -65,11 +65,14 @@
                 data: data.field,
                 type: 'post',
                 dataType: 'json',
-                success: function (jsonObject) {
-                    // layer.msg(JSON.stringify(jsonObject));
-                    console.log(JSON.stringify(jsonObject));
-                    debugger;
-                    window.location.href = jsonObject.data.redirectUri;
+                success: function (returnData) {
+                    if(returnData.code == 200){
+                        // layer.msg(JSON.stringify(jsonObject));
+                        // console.log(JSON.stringify(returnData));
+                        window.location.href = returnData.data.redirectUri;
+                    } else {
+                        layer.msg(returnData.msg);
+                    }
                 }
             });
         });

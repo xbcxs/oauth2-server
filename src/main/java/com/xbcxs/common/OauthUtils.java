@@ -3,12 +3,20 @@ package com.xbcxs.common;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by xiaosh on 2019/8/6.
+ * oauth工具类
+ *
+ * @author xiaosh
+ * @date 2019/9/5
  */
 public class OauthUtils {
 
+    private OauthUtils() {
+
+    }
+
     /**
      * 获取WEB项目请求地址
+     *
      * @param request
      * @return
      */

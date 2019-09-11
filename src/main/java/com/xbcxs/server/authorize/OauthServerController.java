@@ -1,11 +1,10 @@
 package com.xbcxs.server.authorize;
 
-import com.alibaba.fastjson.JSONObject;
 import com.xbcxs.common.HttpResult;
 import com.xbcxs.common.OauthConstants;
 import com.xbcxs.common.OauthUtils;
 import com.xbcxs.common.ResponseWriter;
-import com.xbcxs.server.authorize.Exception.AuthorizeException;
+import com.xbcxs.server.authorize.exception.AuthorizeException;
 import com.xbcxs.server.login.AuthLoginService;
 import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest;
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest;
@@ -48,10 +47,10 @@ public class OauthServerController {
 
     @RequestMapping("loginAuthorize")
     public void loginAuthorize(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject validateResult = null;
+        StringBuffer validateResult = null;
         try {
             validateResult = authorizeRequestValidate(request);
-            if (validateResult.size() > 0) {
+            if (validateResult.length() > 0) {
                 throw new AuthorizeException(validateResult.toString());
             }
             //  构建请求至登录页面
@@ -70,16 +69,16 @@ public class OauthServerController {
         } catch (OAuthSystemException e) {
             e.printStackTrace();
         } catch (AuthorizeException e) {
-            ResponseWriter.writer(response, HttpResult.error(validateResult));
+            ResponseWriter.writer(response, HttpResult.error(String.valueOf(validateResult)));
         }
     }
 
     @RequestMapping("authorize")
     public void authorize(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject resultMessage = null;
+        StringBuffer resultMessage = null;
         try {
             resultMessage = authorizeRequestValidate(request);
-            if (resultMessage.size() > 0) {
+            if (resultMessage.length() > 0) {
                 throw new AuthorizeException(resultMessage.toString());
             }
             OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
@@ -99,16 +98,16 @@ public class OauthServerController {
         } catch (OAuthSystemException e) {
             e.printStackTrace();
         } catch (AuthorizeException e) {
-            ResponseWriter.writer(response, HttpResult.error(resultMessage));
+            ResponseWriter.writer(response, HttpResult.error(String.valueOf(resultMessage)));
         }
     }
 
     @RequestMapping(value = "accessToken", method = RequestMethod.POST)
     public void accessToken(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject resultMessage;
+        StringBuffer resultMessage;
         try {
             resultMessage = tokenRequestValidate(request);
-            if (resultMessage.size() > 0) {
+            if (resultMessage.length() > 0) {
                 throw new AuthorizeException(resultMessage.toString());
             }
             String code = request.getParameter("code");
@@ -150,7 +149,7 @@ public class OauthServerController {
      * @throws OAuthProblemException
      * @throws OAuthSystemException
      */
-    private JSONObject authorizeRequestValidate(HttpServletRequest request) throws OAuthProblemException, OAuthSystemException {
+    private StringBuffer authorizeRequestValidate(HttpServletRequest request) throws OAuthProblemException, OAuthSystemException {
         OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
         String clientId = oauthRequest.getClientId();
         String redirectUri = oauthRequest.getRedirectURI();
@@ -165,7 +164,7 @@ public class OauthServerController {
      * @throws OAuthProblemException
      * @throws OAuthSystemException
      */
-    private JSONObject tokenRequestValidate(HttpServletRequest request) throws OAuthProblemException, OAuthSystemException {
+    private StringBuffer tokenRequestValidate(HttpServletRequest request) throws OAuthProblemException, OAuthSystemException {
         OAuthTokenRequest oauthRequest = new OAuthTokenRequest(request);
         String clientId = oauthRequest.getClientId();
         String redirectUri = oauthRequest.getRedirectURI();
@@ -180,19 +179,19 @@ public class OauthServerController {
      * @param redirectUri
      * @return
      */
-    private JSONObject getResultMessage(HttpServletRequest request, String clientId, String redirectUri) {
-        JSONObject resultMessage = new JSONObject();
+    private StringBuffer getResultMessage(HttpServletRequest request, String clientId, String redirectUri) {
+        StringBuffer errorMessage = new StringBuffer();
         if (!OauthConstants.CLIENT_ID.equals(clientId)) {
-            resultMessage.put("client_id", "不能为空");
+            errorMessage.append("client_id不能为空;");
         }
         if (!OauthConstants.CLIENT_REDIRECT_URI.equals(redirectUri)) {
-            resultMessage.put("redirect_uri", "不能为空");
+            errorMessage.append("redirect_uri不能为空;");
         }
         String requestPrefix = OauthUtils.getRequestPrefix(request);
         if (!OauthConstants.CLIENT_REDIRECT_URI.startsWith(requestPrefix)) {
-            resultMessage.put("redirect_uri", "域与注册时不符");
+            errorMessage.append("redirect_uri域与注册时不符;");
         }
-        return resultMessage;
+        return errorMessage;
     }
 
 }

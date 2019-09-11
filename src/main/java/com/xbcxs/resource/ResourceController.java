@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by xiaosh on 2019/8/7.
+ * 资源服务控制层
+ * @author xiaosh
+ * @date 2019/8/7
  */
 @RestController
 @RequestMapping("resource")

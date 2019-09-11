@@ -1,7 +1,7 @@
 package com.xbcxs.server.login;
 
 import com.xbcxs.server.authorize.CodeService;
-import com.xbcxs.server.authorize.Exception.AuthorizeException;
+import com.xbcxs.server.authorize.exception.AuthorizeException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -3,62 +3,70 @@ package com.xbcxs.json;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
+ * HTTP/JSON数据封装
  * @author xiaosh
  * @date 2019/9/4
  */
-public class HttpResult{
+public class HttpResult<M, D>  {
 
-    private static final long serialVersionUID = 1L;
+    private String code;
+    private M msg;
+    private D data;
 
-    private int code;
-    private String msg;
+    public HttpResult() {
+    }
 
-
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public String getMsg() {
+    public M getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
+    public void setMsg(M msg) {
         this.msg = msg;
     }
 
-    private HttpResult(int code, String msg/*, T data*/){
+    public D getData() {
+        return data;
+    }
+
+    public void setData(D data) {
+        this.data = data;
+    }
+
+    private HttpResult(String code, M msg, D data) {
         this.code = code;
         this.msg = msg;
-//        this.data = data;
+        this.data = data;
     }
 
-   /* public static <T> String success(String msg, T data){
-        return new HttpResult(HttpServletResponse.SC_OK, msg, data).toJSONString();
-    }*/
+    public static <M, D> String success(M msg, D data) {
+        return new HttpResult(String.valueOf(HttpServletResponse.SC_OK), msg, data).toJSONString();
+    }
 
-//    public static <T> String success(T data){
-//        return new HttpResult(HttpServletResponse.SC_OK, "success!", data).toJSONString();
-//    }
-//
-//    public static String error(String msg){
-//        return new HttpResult(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, msg, null).toJSONString();
-//    }
+    public static <D> String success(D data) {
+        return new HttpResult(String.valueOf(HttpServletResponse.SC_OK), "success!", data).toJSONString();
+    }
+
+    public static <M> String error(M msg) {
+        return new HttpResult(String.valueOf(HttpServletResponse.SC_INTERNAL_SERVER_ERROR), msg, null).toJSONString();
+    }
+
+    public static <M> String error(String code, M msg) {
+        return new HttpResult(code, msg, null).toJSONString();
+    }
 
     public String toJSONString() {
-        HttpResult httpResult = this;
-        return JSONObject.toJSONString(httpResult, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.WriteMapNullValue);
-    }
-
-    public static void main(String[] args){
-        HttpResult httpResult = new HttpResult(1,"dsD");
-
-        String str = JSONObject.toJSONString(httpResult);
-        System.out.println("================str:" +str);
+        return JSONObject.toJSONString(this, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.WriteMapNullValue);
     }
 
 }

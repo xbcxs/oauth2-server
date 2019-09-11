@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.xbcxs.common.HttpResult;
 import com.xbcxs.common.ResponseWriter;
 import com.xbcxs.server.authorize.CodeService;
-import com.xbcxs.server.authorize.Exception.AuthorizeException;
+import com.xbcxs.server.authorize.exception.AuthorizeException;
 import org.apache.oltu.oauth2.as.request.OAuthAuthzRequest;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;

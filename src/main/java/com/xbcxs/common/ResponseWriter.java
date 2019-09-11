@@ -1,18 +1,20 @@
 package com.xbcxs.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Created by xiaosh on 2019/8/5.
+ * response封装
+ *
+ * @author xiaosh
+ * @date 2019/9/5
  */
 public class ResponseWriter {
 
-    Logger log = LoggerFactory.getLogger(ResponseWriter.class);
+    private ResponseWriter() {
+
+    }
 
     public static void writer(HttpServletResponse response, String json) {
         PrintWriter writer = null;

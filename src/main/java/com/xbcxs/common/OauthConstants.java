@@ -22,6 +22,11 @@ public class OauthConstants {
     public static final String RESOURCE_REQUEST = "http://localhost:8888/oauth2/resource/getUserToken";
 
     public class CacheCase {
+
+        private CacheCase(){
+
+        }
+
         public static final String CODE_CACHE = "codeCache";
         public static final String AUTH_TOKEN_CACHE = "authTokenCache";
     }

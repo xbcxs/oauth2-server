@@ -1,4 +1,4 @@
-package com.xbcxs.server.authorize.Exception;
+package com.xbcxs.server.authorize.exception;
 
 /**
  * @author xiaosh

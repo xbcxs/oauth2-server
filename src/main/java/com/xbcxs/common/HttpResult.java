@@ -4,64 +4,65 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.Serializable;
 
 /**
  * HTTP/JSON数据封装
  * @author xiaosh
  * @date 2019/9/4
  */
-public class HttpResult<M, D> implements Serializable {
+public class HttpResult<T>  {
+    private Integer code;
+    private String message;
+    private T data;
 
-    private static final long serialVersionUID = 1L;
-    private int code;
-    private M msg;
-    private D data;
-
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
-    public M getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(M msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public D getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(D data) {
+    public void setData(T data) {
         this.data = data;
     }
 
-    private HttpResult(int code, M msg, D data) {
+    private HttpResult(Integer code, String message, T data) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
         this.data = data;
     }
 
-    public static <M, D> String success(M msg, D data) {
-        return new HttpResult(HttpServletResponse.SC_OK, msg, data).toJSONString();
+    public static <T> String success(String message, T data) {
+        return new HttpResult(HttpServletResponse.SC_OK, message, data).toJSONString();
     }
 
-    public static <D> String success(D data) {
+    public static <T> String success(T data) {
         return new HttpResult(HttpServletResponse.SC_OK, "success!", data).toJSONString();
     }
 
-    public static <M> String error(M msg) {
-        return new HttpResult(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, msg, null).toJSONString();
+    public static String error(String message) {
+        return new HttpResult(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message, null).toJSONString();
+    }
+
+    public static String error(Integer code, String message) {
+        return new HttpResult(code, message, null).toJSONString();
     }
 
     public String toJSONString() {
-        return JSONObject.toJSONString(this, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.WriteMapNullValue);
+        return JSONObject.toJSONString(this, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.WriteNullBooleanAsFalse, SerializerFeature.WriteNullListAsEmpty, SerializerFeature.WriteNullNumberAsZero, SerializerFeature.WriteNullStringAsEmpty);
     }
 
 }
